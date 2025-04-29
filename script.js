@@ -9,7 +9,7 @@ function formatDescription(level) {
 Level name: ${level.name}
 Publisher: ${level.author}
 ID: ${level.id}
-Song: ${level.songName} (ID: ${level.songID})
+Song: ${level.songAuthor} - ${level.songName} (ID: ${level.songID})
 
 #geometrydash
 #mrspaghetti`;
