@@ -32,6 +32,10 @@ OFFICIAL_SONGS = [
     "Press Start", "Nock Em", "Power Trip",
 ]
 
+# Difficulty names by key 9, and demon types by key 43, as GDBrowser's classes/Level.js.
+DIFFICULTIES = {"10": "Easy", "20": "Normal", "30": "Hard", "40": "Harder", "50": "Insane"}
+DEMON_TYPES = {"3": "Easy", "4": "Medium", "5": "Insane", "6": "Extreme"}
+
 def split_pairs(text, sep):
     parts = text.split(sep)
     return dict(zip(parts[::2], parts[1::2]))
@@ -59,7 +63,15 @@ def parse_level(text):
         song_name = OFFICIAL_SONGS[official] if official < len(OFFICIAL_SONGS) else "Unknown"
         song_id = f"Level {official}"
 
+    # None for an unrated level
+    difficulty = DIFFICULTIES.get(level.get("9"))
+    if level.get("17") == "1":
+        difficulty = DEMON_TYPES.get(level.get("43"), "Hard") + " Demon"
+    if level.get("25") == "1":
+        difficulty = "Auto"
+
     return {
+        "difficulty": difficulty,
         "name": level.get("2", "Unknown"),
         "author": creator,
         "id": level.get("1", "Unknown"),
@@ -94,9 +106,10 @@ async def gdinfo(ctx, level_id: str):
                 level_id = level['id']
                 song_name = level['songName']
                 song_id = level['songID']
+                difficulty = f" ({level['difficulty']})" if level['difficulty'] else ""
 
                 msg = (
-                    f"**{level_name} (Insane Demon)** By **{creator}** - 100% | MrSpaghetti\n\n"
+                    f"**{level_name}{difficulty}** By **{creator}** - 100% | MrSpaghetti\n\n"
                     f"**Level name:** {level_name}\n"
                     f"**Publisher:** {creator}\n"
                     f"**ID:** {level_id}\n"

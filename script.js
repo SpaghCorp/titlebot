@@ -1,6 +1,8 @@
 // Function to format the level information message (title part)
 function formatTitle(level) {
-    return `${level.name} (Insane Demon) By ${level.author} - 100% | MrSpaghetti`;
+    // Unrated levels get no difficulty in the title
+    const difficulty = level.difficulty && level.difficulty !== "Unrated" ? ` (${level.difficulty})` : "";
+    return `${level.name}${difficulty} By ${level.author} - 100% | MrSpaghetti`;
 }
 
 // Function to format the detailed description
